@@ -2,8 +2,13 @@ const express = require("express");
 const http = require("http");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const upload = require("./utils/upload");
+const bodyParser = require("body-parser");
+const path = require("path");
 
 const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 const server = http.createServer(app);
 
 app.use((req, res, next) => {
@@ -29,25 +34,11 @@ var option = {
 };
 app.use(cors(option));
 app.use(express.json());
-
+const directory = path.join(__dirname, "uploads");
+app.use("/uploads", express.static(directory));
 // Routes
 
-app.use("/api", require("./routes/createCommentRoute"));
-app.use("/api", require("./routes/getCommentsRoute"));
-app.use("/api", require("./routes/getAllComments"));
-
-mongoose
-  .connect("mongodb+srv://admin:Pass.321@blogcomments.qbjvpgx.mongodb.net", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("Connected to MongoDB successfully!");
-    // Your code here
-  })
-  .catch((error) => {
-    console.error("Error connecting to MongoDB:", error.message);
-  });
+app.use("/api", upload.single("file"), require("./routes/audio"));
 
 server.listen(3000, () => {
   console.log("Server runing at 3000 port");
