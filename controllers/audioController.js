@@ -36,7 +36,11 @@ const Create = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const result = await prisma.audio.findMany();
+    const result = await prisma.audio.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
     res.status(201).json({ data: result });
   } catch (error) {
     console.log(error);
