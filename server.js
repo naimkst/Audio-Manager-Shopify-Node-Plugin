@@ -40,6 +40,6 @@ app.use("/uploads", express.static(directory));
 
 app.use("/api", upload.single("file"), require("./routes/audio"));
 
-server.listen(3000, () => {
-  console.log("Server runing at 3000 port");
+server.listen(4004, () => {
+  console.log("Server runing at 4004 port");
 });
